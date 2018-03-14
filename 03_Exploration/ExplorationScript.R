@@ -56,3 +56,6 @@ abnorml_all <- filter(traindata, SaleCondition == "Abnorml")
 nabnorml_all <- filter(traindata, SaleCondition != "Abnorml")
 mean(abnorml_all$SalePrice)
 mean(nabnorml_all$SalePrice) #-> Abnorml hat nicht so viel Einfluss wie Partial, nur 40,000 Dollar
+
+
+#testtesttest
