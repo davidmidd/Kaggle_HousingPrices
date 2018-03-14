@@ -40,7 +40,8 @@ test_sample$SalePrice_Prediction <- predict(linear_mod_pred, test_sample)
 #Wenn kein Basement vorhanden ist, wird NA predicted, diese werden für die Berechnung des mse erstmal rausgenommen
 #Man kann/sollte alternativ die NA's in BsmtQual ersetzen
 test_sample <- na.omit(test_sample)
-mse(test_sample$SalePrice, test_sample$SalePrice_Prediction) #Die Fehler sind immer noch riesig, aber die geringsten die ich bis jetzt hatte :D
+mse(test_sample$SalePrice, test_sample$SalePrice_Prediction) #Die Fehler sind immer noch riesig, aber die geringsten die ich bis jetzt hatte :
+
 
 
 #Untersuchung der Variable SaleCondition, bzw. SaleCondition = Partial, hier ist der Fehler größer...
@@ -58,4 +59,33 @@ mean(abnorml_all$SalePrice)
 mean(nabnorml_all$SalePrice) #-> Abnorml hat nicht so viel Einfluss wie Partial, nur 40,000 Dollar
 
 
-#testtesttest
+#Modell untersuchen 
+train_sample$SalePrice_Prediction <- predict(linear_mod_pred, train_sample)
+train_sample <- na.omit(train_sample)
+mse(train_sample$SalePrice, train_sample$SalePrice_Prediction)
+
+train_sample$Exp <- (1/1000000)*(train_sample$SalePrice_Prediction - train_sample$SalePrice)^2
+train_sample <- arrange(train_sample, desc(Exp))
+
+close <- tail(train_sample, n = 25)
+spread <- head(train_sample, n = 25)
+
+mean(close$OverallQual)
+mean(spread$OverallQual) # ein Unterschied von ca. 1.5 bei der OverallQual der Häuser, median bringt hier nix
+
+mean(close$OverallCond)
+mean(spread$OverallCond) # hier kein großer Unterschied
+
+mean(close$YearBuilt)
+mean(spread$YearBuilt)
+
+median(close$YearBuilt)
+median(spread$YearBuilt) # die Häuser die schlechter predicted werden, sind im schnitt 15 Jahre älter, Median 35 Jahre 
+
+table(close$SaleCondition)
+table(spread$SaleCondition) # das Hier ist natürlich auffällig :D, warum wurden die normalen aus spread so schlecht vorhergesagt?
+
+
+
+
+
